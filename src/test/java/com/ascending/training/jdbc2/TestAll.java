@@ -1,6 +1,5 @@
-package com.ascending.training.jdbc;
+package com.ascending.training.jdbc2;
 
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

@@ -1,4 +1,4 @@
-package com.ascending.training.jdbc;
+package com.ascending.training.jdbc1;
 
 import com.ascending.training.model.Customer;
 

@@ -1,5 +1,6 @@
-package com.ascending.training.jdbc;
+package com.ascending.training.jdbc2;
 
+import com.ascending.training.jdbc1.BookDao;
 import com.ascending.training.model.Book;
 import org.junit.Assert;
 import org.junit.Before;
