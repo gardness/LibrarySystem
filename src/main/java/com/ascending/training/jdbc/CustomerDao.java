@@ -1,14 +1,18 @@
-package com.ascending.training.jdbc1;
+package com.ascending.training.jdbc;
 
 import com.ascending.training.model.Customer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
 
 public class CustomerDao {
-    static final String DB_URL = "jdbc:postgresql://localhost:5433/mylibrarysystem_db";
-    static final String USER = "admin";
-    static final String PASS = "12345678";
+    static final String dbURL = "jdbc:postgresql://localhost:5433/mylibrarysystem_db";
+    static final String username = "admin";
+    static final String password = "12345678";
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public List<Customer> getCustomers() {
         List<Customer> customers = new ArrayList<>();
@@ -17,25 +21,16 @@ public class CustomerDao {
         ResultSet rs = null;
 
         try {
-            System.out.println("Connecting to database ...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-            System.out.println("Creating statement ...");
+            conn = DriverManager.getConnection(dbURL, username, password);
             stmt = conn.createStatement();
-            String sql;
-            sql = "select * from customer";
+
+            String sql = "SELECT * FROM customers";
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                long id = rs.getLong("id");
                 String name = rs.getString("name");
                 String address = rs.getString("address");
 
-                Customer customer = new Customer();
-                customer.setId(id);
-                customer.setName(name);
-                customer.setAddress(address);
-                customers.add(customer);
             }
 
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.ascending.training.jdbc1;
+package com.ascending.training.jdbc;
 
 import com.ascending.training.model.IssueStatus;
 

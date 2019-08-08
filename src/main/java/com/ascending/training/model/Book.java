@@ -1,11 +1,43 @@
 package com.ascending.training.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "books")
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "category")
     private String category;
-    private double rental_price;
+
+    @Column(name = "rental_price")
+    private double rentalPrice;
+
+    @Column(name = "status")
     private Boolean status = true;
+
+    public Book(){}
+
+    public Book(long id, String title, String category, double rentalPrice, Boolean status) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.rentalPrice = rentalPrice;
+        this.status = status;
+    }
+
+    public Book(String title, String category, double rentalPrice, Boolean status) {
+        this.title = title;
+        this.category = category;
+        this.rentalPrice = rentalPrice;
+        this.status = status;
+    }
 
     public long getId() {
         return id;
@@ -19,16 +51,12 @@ public class Book {
         return category;
     }
 
-    public double getRental_price() {
-        return rental_price;
+    public double getRentalPrice() {
+        return rentalPrice;
     }
 
     public Boolean getStatus() {
         return status;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {
@@ -39,11 +67,16 @@ public class Book {
         this.category = category;
     }
 
-    public void setRental_price(double rental_price) {
-        this.rental_price = rental_price;
+    public void setRentalPrice(double rental_price) {
+        this.rentalPrice = rental_price;
     }
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(id + ", " + title + ", " + category + ", " + rentalPrice + ", " + status);
     }
 }

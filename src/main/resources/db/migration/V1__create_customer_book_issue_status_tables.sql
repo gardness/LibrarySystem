@@ -1,11 +1,11 @@
 CREATE TABLE customers(
-	id INTEGER PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	name TEXT,
 	address TEXT
 );
 
 CREATE TABLE books(
-	id INTEGER PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	title TEXT,
 	category TEXT,
 	rental_price NUMERIC,
@@ -13,7 +13,7 @@ CREATE TABLE books(
 );
 
 CREATE TABLE issue_statuses(
-	id INTEGER PRIMARY KEY,
+	id BIGSERIAL PRIMARY KEY,
 	issue_date DATE,
 	return_date DATE,
 	customer_id INTEGER REFERENCES customers(id),

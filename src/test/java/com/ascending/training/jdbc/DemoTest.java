@@ -1,4 +1,4 @@
-package com.ascending.training.jdbc2;
+package com.ascending.training.jdbc;
 
 import org.junit.*;
 import org.slf4j.Logger;

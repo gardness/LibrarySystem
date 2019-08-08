@@ -1,4 +1,4 @@
-package com.ascending.training.jdbc2;
+package com.ascending.training.jdbc;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

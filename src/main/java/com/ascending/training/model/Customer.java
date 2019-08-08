@@ -1,9 +1,20 @@
 package com.ascending.training.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "customers")
 public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "address")
     private String address;
+
 
     public long getId() {
         return id;
@@ -15,10 +26,6 @@ public class Customer {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void setName(String name) {

@@ -1,4 +1,4 @@
-package com.ascending.training.jdbc1;
+package com.ascending.training.jdbc;
 
 import com.ascending.training.model.Book;
 import org.slf4j.Logger;
@@ -36,12 +36,7 @@ public class BookDao {
                 double rental_price = rs.getDouble("rental_price");
                 Boolean status = rs.getBoolean("status");
 
-                Book book = new Book();
-                book.setId(id);
-                book.setTitle(title);
-                book.setCategory(category);
-                book.setRental_price(rental_price);
-                book.setStatus(status);
+                Book book = new Book(id, title, category, rental_price, status);
                 books.add(book);
             }
 
@@ -72,18 +67,17 @@ public class BookDao {
         PreparedStatement ps = null;
 
         try {
-            System.out.println("Connecting to database ...");
             conn = DriverManager.getConnection(dbURL, username, password);
 
             String sql = "INSERT INTO books (id, title, category, rental_price, status) " +
                     "VALUES (?, ?, ?, ?, ?)";
 
             ps = conn.prepareStatement(sql);
-            ps.setLong(1, 1234);
-            ps.setString(2, "Thinking in Java");
-            ps.setString(3, "Technology");
-            ps.setDouble(4, 47.27);
-            ps.setBoolean(5, false);
+            ps.setLong(1, book.getId());
+            ps.setString(2, book.getTitle());
+            ps.setString(3, book.getCategory());
+            ps.setDouble(4, book.getRentalPrice());
+            ps.setBoolean(5, book.getStatus());
 
             status = ps.executeUpdate();
 
@@ -111,17 +105,16 @@ public class BookDao {
         PreparedStatement ps = null;
 
         try {
-            System.out.println("Connecting to database ...");
             conn = DriverManager.getConnection(dbURL, username, password);
 
             String sql = "UPDATE books SET title=?, category=?, rental_price=?, status=? WHERE id=?";
 
             ps = conn.prepareStatement(sql);
-            ps.setString(1, "Thinking in Java");
-            ps.setString(2, "Technology");
-            ps.setDouble(3, 47.27);
-            ps.setBoolean(4, false);
-            ps.setLong(5, 1234);
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getCategory());
+            ps.setDouble(3, book.getRentalPrice());
+            ps.setBoolean(4, book.getStatus());
+            ps.setLong(5, book.getId());
 
             status = ps.executeUpdate();
 
@@ -143,7 +136,7 @@ public class BookDao {
         return status;
     }
 
-    public int delete(int id) {
+    public int delete(long id) {
         int status = 0;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -154,7 +147,7 @@ public class BookDao {
             String sql = "DELETE FROM books WHERE id=?";
 
             ps = conn.prepareStatement(sql);
-            ps.setLong(1, 1234);
+            ps.setLong(1, id);
 
             status = ps.executeUpdate();
 
@@ -174,5 +167,14 @@ public class BookDao {
         }
 
         return status;
+    }
+
+    public static void main(String[] args) {
+        BookDao bookDao = new BookDao();
+        List<Book> books = bookDao.getBooks();
+
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
     }
 }

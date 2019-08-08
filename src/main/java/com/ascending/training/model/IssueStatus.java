@@ -1,13 +1,26 @@
 package com.ascending.training.model;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "issue_statuses")
 public class IssueStatus {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "issue_date")
     private Date issueDate;
+
+    @Column(name = "return_date")
     private Date returnDate;
-    private Customer customer;
-    private Book book;
+
+//    @Column(name = "customer_id")
+//    private Customer customer;
+//
+//    @Column(name = "book_id")
+//    private Book book;
 
     public long getId() {
         return id;
@@ -19,10 +32,6 @@ public class IssueStatus {
 
     public Date getReturnDate() {
         return returnDate;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void setIssueDate(Date issueDate) {
