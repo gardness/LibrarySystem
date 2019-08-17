@@ -1,6 +1,6 @@
 package com.ascending.training.repository;
 
-import com.ascending.training.model.Book;
+import com.ascending.training.model.IssueStatus;
 import com.ascending.training.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -8,28 +8,20 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class BookDaoImpl implements BookDao{
+public class IssueStatusDaoImpl implements IssueStatusDao {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public long save(Book book) {
+    public long save(IssueStatus issueStatus) {
         Transaction transaction = null;
-        long bookId = 0;
+        long issueStatusId = 0;
         Boolean isSuccess = true;
 
-        logger.warn("Before getSessionFactory.openSession().");
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            logger.warn("Enter getSessionFactory.openSession().");
             transaction = session.beginTransaction();
-
-            logger.warn("Enter beginTransaction().");
-            bookId = (long) session.save(book);
-
-            logger.warn("session.save() completes.");
+            issueStatusId = (long) session.save(issueStatus);
             transaction.commit();
         } catch (Exception e) {
             isSuccess = false;
@@ -40,20 +32,20 @@ public class BookDaoImpl implements BookDao{
         }
 
         if (isSuccess) {
-            logger.warn(String.format("The book %s has been inserted into the table.", book.toString()));
+            logger.warn(String.format("The issue status %s has been inserted into the table.", issueStatus.toString()));
         }
 
-        return bookId;
+        return issueStatusId;
     }
 
     @Override
-    public boolean update(Book book) {
+    public boolean update(IssueStatus issueStatus) {
         Transaction transaction = null;
-        Boolean isSuccess = true;
+        boolean isSuccess = true;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.saveOrUpdate(book);
+            session.saveOrUpdate(issueStatus);
             transaction.commit();
         } catch (Exception e) {
             isSuccess = false;
@@ -64,21 +56,23 @@ public class BookDaoImpl implements BookDao{
         }
 
         if (isSuccess) {
-            logger.warn(String.format("The book %s has been updated.", book.toString()));
+            logger.warn(String.format("The issue status %s has been updated.", issueStatus.toString()));
         }
 
         return isSuccess;
     }
 
     @Override
-    public boolean delete(String bookTitle) {
-        String hql = "delete Book where title = :bookTitle";         //  Placeholder with a name, not anonymous
+    public boolean delete(long issueStatusesId) {
+        String hql = "delete IssueStatus as iss " +
+                "where iss.id = :issueStatusesId";
+
         int deletedCount = 0;
         Transaction transaction = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
-            query.setParameter("bookTitle", bookTitle);
+            Query<IssueStatus> query = session.createQuery(hql);
+            query.setParameter("issueStatusesId", issueStatusesId);
             transaction = session.beginTransaction();
             deletedCount = query.executeUpdate();
             transaction.commit();
@@ -89,38 +83,39 @@ public class BookDaoImpl implements BookDao{
             logger.error(e.getMessage());
         }
 
-        logger.debug(String.format("The book %s has been deleted.", bookTitle));
+        logger.warn(String.format("The issue status %s has been deleted.", issueStatusesId));
 
         return deletedCount >= 1 ? true : false;
     }
 
     @Override
-    public List<Book> getBooks() {
-        String hql = "from Book";
+    public List<IssueStatus> getIssueStatuses() {
+        String hql = "from IssueStatus as iss " +
+                "left join fetch iss.book " +
+                "left join fetch iss.customer ";
+
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
+            Query<IssueStatus> query = session.createQuery(hql);
             return query.list();
         }
     }
 
     @Override
-    public Book getBookByTitle(String bookTitle) {
-        if (bookTitle == null) {
-            return null;
-        }
+    public IssueStatus getIssueStatusById(long id) {
 
-        String hql = "from Book as bk " +
-                "left join fetch bk.issueStatuses as is " +
-                "where lower(bk.title) = :bookTitle";
+        String hql = "from IssueStatus as iss " +
+                "left join fetch iss.book " +
+                "left join fetch iss.customer " +
+                "where iss.id= :issueStatusId";
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
-            query.setParameter("bookTitle", bookTitle.toLowerCase());
+            Query<IssueStatus> query = session.createQuery(hql);
+            query.setParameter("issueStatusId", id);
 
-            Book book = query.uniqueResult();
-            logger.debug(book.toString());
+            IssueStatus issueStatus = query.uniqueResult();
+            logger.warn(issueStatus.toString());
 
-            return book;
+            return issueStatus;
         }
     }
 }

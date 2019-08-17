@@ -1,6 +1,8 @@
 package com.ascending.training.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -21,6 +23,9 @@ public class Book {
 
     @Column(name = "status")
     private Boolean status = true;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Set<IssueStatus> issueStatuses = new HashSet<>();
 
     public Book(){}
 
@@ -57,6 +62,14 @@ public class Book {
 
     public Boolean getStatus() {
         return status;
+    }
+
+    public Set<IssueStatus> getIssueStatuses() {
+        return issueStatuses;
+    }
+
+    public void setIssueStatuses(Set<IssueStatus> issueStatuses) {
+        this.issueStatuses = issueStatuses;
     }
 
     public void setTitle(String title) {

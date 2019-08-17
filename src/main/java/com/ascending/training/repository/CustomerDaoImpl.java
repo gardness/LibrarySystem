@@ -1,6 +1,6 @@
 package com.ascending.training.repository;
 
-import com.ascending.training.model.Book;
+import com.ascending.training.model.Customer;
 import com.ascending.training.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -8,17 +8,15 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class BookDaoImpl implements BookDao{
+public class CustomerDaoImpl implements CustomerDao {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public long save(Book book) {
+    public long save(Customer customer) {
         Transaction transaction = null;
-        long bookId = 0;
+        long customerId = 0;
         Boolean isSuccess = true;
 
         logger.warn("Before getSessionFactory.openSession().");
@@ -27,7 +25,7 @@ public class BookDaoImpl implements BookDao{
             transaction = session.beginTransaction();
 
             logger.warn("Enter beginTransaction().");
-            bookId = (long) session.save(book);
+            customerId = (long) session.save(customer);
 
             logger.warn("session.save() completes.");
             transaction.commit();
@@ -40,20 +38,20 @@ public class BookDaoImpl implements BookDao{
         }
 
         if (isSuccess) {
-            logger.warn(String.format("The book %s has been inserted into the table.", book.toString()));
+            logger.warn(String.format("The customer %s has been inserted into the table.", customer.toString()));
         }
 
-        return bookId;
+        return customerId;
     }
 
     @Override
-    public boolean update(Book book) {
+    public boolean update(Customer customer) {
         Transaction transaction = null;
         Boolean isSuccess = true;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.saveOrUpdate(book);
+            session.saveOrUpdate(customer);
             transaction.commit();
         } catch (Exception e) {
             isSuccess = false;
@@ -64,21 +62,21 @@ public class BookDaoImpl implements BookDao{
         }
 
         if (isSuccess) {
-            logger.warn(String.format("The book %s has been updated.", book.toString()));
+            logger.warn(String.format("The customer %s has been updated.", customer.toString()));
         }
 
         return isSuccess;
     }
 
     @Override
-    public boolean delete(String bookTitle) {
-        String hql = "delete Book where title = :bookTitle";         //  Placeholder with a name, not anonymous
+    public boolean delete(String customerName) {
+        String hql = "delete Customer where name = :customerName";         //  Placeholder with a name, not anonymous
         int deletedCount = 0;
         Transaction transaction = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
-            query.setParameter("bookTitle", bookTitle);
+            Query<Customer> query = session.createQuery(hql);
+            query.setParameter("customerName", customerName);
             transaction = session.beginTransaction();
             deletedCount = query.executeUpdate();
             transaction.commit();
@@ -89,38 +87,38 @@ public class BookDaoImpl implements BookDao{
             logger.error(e.getMessage());
         }
 
-        logger.debug(String.format("The book %s has been deleted.", bookTitle));
+        logger.warn(String.format("The customer %s has been deleted.", customerName));
 
         return deletedCount >= 1 ? true : false;
     }
 
     @Override
-    public List<Book> getBooks() {
-        String hql = "from Book";
+    public List<Customer> getCustomers() {
+        String hql = "from Customer";
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
+            Query<Customer> query = session.createQuery(hql);
             return query.list();
         }
     }
 
     @Override
-    public Book getBookByTitle(String bookTitle) {
-        if (bookTitle == null) {
+    public Customer getCustomerByName(String customerName) {
+        if (customerName == null) {
             return null;
         }
 
-        String hql = "from Book as bk " +
-                "left join fetch bk.issueStatuses as is " +
-                "where lower(bk.title) = :bookTitle";
+        String hql = "from Customer as ct " +
+                "left join fetch ct.issueStatuses as is " +
+                "where lower(ct.name) = :customerName";
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Book> query = session.createQuery(hql);
-            query.setParameter("bookTitle", bookTitle.toLowerCase());
+            Query<Customer> query = session.createQuery(hql);
+            query.setParameter("customerName", customerName.toLowerCase());
 
-            Book book = query.uniqueResult();
-            logger.debug(book.toString());
+            Customer customer = query.uniqueResult();
+            logger.warn(customer.toString());
 
-            return book;
+            return customer;
         }
     }
 }

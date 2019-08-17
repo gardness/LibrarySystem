@@ -99,9 +99,9 @@
                     <version>${flyway.version}</version>
                     <configuration>
                         <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://localhost:5433/mylibrarysystem_db</url>
-                        <user>admin</user>
-                        <password>12345678</password>
+                        <url>jdbc:postgresql://${db_url}</url>
+                        <user>${db_username}</user>
+                        <password>${db_password}</password>
                         <schemas>
                             <schema>public</schema>
                         </schemas>
