@@ -7,11 +7,13 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Repository
 public class BookDaoImpl implements BookDao{
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -96,7 +98,8 @@ public class BookDaoImpl implements BookDao{
 
     @Override
     public List<Book> getBooks() {
-        String hql = "from Book";
+        String hql = "from Book as bk " +
+                "left join fetch bk.issueStatuses";
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Book> query = session.createQuery(hql);
             return query.list();

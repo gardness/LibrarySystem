@@ -16,7 +16,7 @@ public class Customer {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<IssueStatus> issueStatuses;
 
     public Customer(){}

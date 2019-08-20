@@ -24,7 +24,7 @@ public class Book {
     @Column(name = "status")
     private Boolean status = true;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Set<IssueStatus> issueStatuses = new HashSet<>();
 
     public Book(){}

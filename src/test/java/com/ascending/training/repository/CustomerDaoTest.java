@@ -29,7 +29,6 @@ public class CustomerDaoTest {
         long sRet = customerDao.save(sCustomer);
     }
 
-    @Ignore
     @After
     public void after() {
         Boolean fret = customerDao.delete("Joe");
@@ -42,6 +41,7 @@ public class CustomerDaoTest {
         long ret = customerDao.save(newCustomer);
         Assert.assertNotNull(ret);
 
+        customerDao.delete(newCustomer.getName());
         logger.info("First Test!");
     }
 

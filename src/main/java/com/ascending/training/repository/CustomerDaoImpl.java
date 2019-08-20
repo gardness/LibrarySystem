@@ -7,9 +7,11 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CustomerDaoImpl implements CustomerDao {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -94,7 +96,8 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public List<Customer> getCustomers() {
-        String hql = "from Customer";
+        String hql = "from Customer as ct " +
+                "left join fetch ct.issueStatuses";
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Customer> query = session.createQuery(hql);
             return query.list();
