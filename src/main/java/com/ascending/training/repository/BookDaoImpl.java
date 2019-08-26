@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository
-public class BookDaoImpl implements BookDao{
+public class BookDaoImpl implements BookDao {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -121,7 +121,9 @@ public class BookDaoImpl implements BookDao{
             query.setParameter("bookTitle", bookTitle.toLowerCase());
 
             Book book = query.uniqueResult();
-            logger.debug(book.toString());
+            if (book != null) {
+                logger.debug(book.toString());
+            }
 
             return book;
         }
