@@ -68,7 +68,7 @@ public class BookServiceTest {
 
     @Test
     public void delete() {
-        Boolean ret = bookService.delete("Advanced Programming in the UNIX environment");
+        Boolean ret = bookService.delete("Thinking in Java");
 
         Assert.assertEquals(true, ret);
 

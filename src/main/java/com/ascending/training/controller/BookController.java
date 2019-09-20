@@ -26,17 +26,18 @@ public class BookController {
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     @GetMapping(value = "/{BookTitle}", produces = "application/json")
-    public List<Book> getBook(@PathVariable String bookTitle) {
+    public Book getBook(@PathVariable(name = "BookTitle") String bookTitle) {
         Book book = bookService.getBookByTitle(bookTitle);
 
         if (book != null) {
-            return bookService.getBooks();
+            return book;
         }
 
         return null;
     }
 
-    @RequestMapping(value = "/")
+//    @RequestMapping(value = "", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "", produces = "application/json")
     public String createBook(@RequestBody Book book) {
         logger.debug(String.format("Book : %s", book.toString()));
 
@@ -44,10 +45,39 @@ public class BookController {
         long isSuccess = bookService.save(book);
 
         if (isSuccess == 0) {
-            msg = "The book has not been created";
+            msg = "The book has not been created.";
         }
 
         return msg;
     }
 
+//    @RequestMapping(value = "", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/{id}", produces = "application/json")
+    public String updateBook(@PathVariable(name = "id") long bookId, @RequestBody Book book) {
+        logger.debug(String.format("Book ID : %d, Book : %s", bookId, book.toString()));
+
+        Book newBook = new Book(bookId, book.getTitle(), book.getCategory(), book.getRentalPrice(), book.getStatus());
+        String msg = "The book has been updated.";
+        boolean isSuccess = bookService.update(newBook);
+
+        if (!isSuccess) {
+            msg = "The book has not been updated.";
+        }
+
+        return msg;
+    }
+
+//    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.DELETE, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/{bookTitle}", produces = "application/json")
+    public String deleteBook(@PathVariable String bookTitle) {
+        logger.debug("Book title : " + bookTitle);
+
+        String msg = "The book was deleted.";
+        boolean isSuccess = bookService.delete(bookTitle);
+        if (!isSuccess) {
+            msg = "The book was not deleted.";
+        }
+
+        return msg;
+    }
 }

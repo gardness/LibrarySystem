@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private Logger logger;
 
     @Override
     public long save(Book book) {
@@ -91,9 +93,11 @@ public class BookDaoImpl implements BookDao {
             logger.error(e.getMessage());
         }
 
-        logger.debug(String.format("The book %s has been deleted.", bookTitle));
+        if (deletedCount > 0) {
+            logger.debug(String.format("The book %s has been deleted.", bookTitle));
+        }
 
-        return deletedCount >= 1 ? true : false;
+        return deletedCount > 0? true : false;
     }
 
     @Override

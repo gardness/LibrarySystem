@@ -20,14 +20,14 @@ public class UserController {
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     @GetMapping(value = "/{email}", produces = "application/json")
-    public List<User> getUserBy(@PathVariable String email) {
+    public User getUserBy(@PathVariable String email) {
         User user = userService.getUserByEmail(email);
 
         if (user != null) {
             logger.info(user.toString());
         }
 
-        return null;
+        return user;
     }
 
 }

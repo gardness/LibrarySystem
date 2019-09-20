@@ -1,5 +1,7 @@
 package com.ascending.training.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,10 +21,12 @@ public class IssueStatus {
     @Column(name = "return_date")
     private Date returnDate;
 
+    @JsonIgnore
     @JoinColumn(name = "customer_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
+    @JsonIgnore
     @JoinColumn(name = "book_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
@@ -30,6 +34,19 @@ public class IssueStatus {
     public IssueStatus(){}
 
     public IssueStatus(String issueDate, String returnDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        try {
+            this.issueDate = simpleDateFormat.parse(issueDate);
+            this.returnDate = simpleDateFormat.parse(returnDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.id = id;
+    }
+
+    public IssueStatus(long id, String issueDate, String returnDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
         try {

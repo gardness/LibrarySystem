@@ -1,6 +1,3 @@
-/*
- * Copyright (C) 2019 Liwei Wang, daveywang@live.com - All Rights Reserved
- */
 
 package com.ascending.training.repository;
 
@@ -16,7 +13,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private Logger logger;
 
     @Override
     public boolean save(User user) {

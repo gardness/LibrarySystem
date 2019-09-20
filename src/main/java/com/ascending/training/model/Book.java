@@ -2,6 +2,7 @@ package com.ascending.training.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -65,6 +66,17 @@ public class Book {
     }
 
     public Set<IssueStatus> getIssueStatuses() {
+//        try {
+//            int size = issueStatuses.size();
+//
+//            if (size == 0) {
+//                return null;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+
         return issueStatuses;
     }
 
@@ -92,4 +104,35 @@ public class Book {
     public String toString() {
         return String.format(id + ", " + title + ", " + category + ", " + rentalPrice + ", " + status);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title);
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Book book = (Book) obj;
+        if (id != book.getId()) {
+            return false;
+        }
+
+        if (!title.equals(book.getTitle())) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

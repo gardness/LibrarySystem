@@ -13,23 +13,23 @@ public class IssueStatusService {
     @Autowired
     private IssueStatusDao issueStatusDao;
 
-    long save(IssueStatus issueStatus) {
+    public long save(IssueStatus issueStatus) {
         return issueStatusDao.save(issueStatus);
     }
 
-    boolean update(IssueStatus issueStatus) {
+    public boolean update(IssueStatus issueStatus) {
         return issueStatusDao.update(issueStatus);
     }
 
-    boolean delete(long issueStatusesId) {
+    public boolean delete(long issueStatusesId) {
         return issueStatusDao.delete(issueStatusesId);
     }
 
-    List<IssueStatus> getIssueStatuses() {
+    public List<IssueStatus> getIssueStatuses() {
         return issueStatusDao.getIssueStatuses();
     }
 
-    IssueStatus getIssueStatusById(long id) {
+    public IssueStatus getIssueStatusById(long id) {
         return issueStatusDao.getIssueStatusById(id);
     }
 }

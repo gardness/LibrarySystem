@@ -1,6 +1,6 @@
 insert into role (name, allowed_resource, allowed_read, allowed_create, allowed_update, allowed_delete) values
 ('Admin', '/', 'Y', 'Y', 'Y', 'Y'),
-('Manager', '/depts,/departments,/employees,/ems,/acnts,/accounts', 'Y', 'Y', 'Y', 'N'),
+('Manager', '/depts,/departments,/employees,/ems,/acnts,/accounts,/test/param,/files,', 'Y', 'Y', 'Y', 'Y'),
 ('user', '/employees,/ems,/acnts,/accounts', 'Y', 'N', 'N', 'N')
 ;
 commit;
