@@ -25,12 +25,12 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest)request;
+        HttpServletRequest req = (HttpServletRequest) request;
         int statusCode = authorization(req);
         if (statusCode == HttpServletResponse.SC_ACCEPTED) {
             filterChain.doFilter(request, response);
         } else {
-            ((HttpServletResponse)response).sendError(statusCode);
+            ((HttpServletResponse) response).sendError(statusCode);
         }
     }
 
@@ -42,7 +42,11 @@ public class SecurityFilter implements Filter {
         int statusCode = HttpServletResponse.SC_UNAUTHORIZED;
         String uri = req.getRequestURI();
         String verb = req.getMethod();
-        if (uri.equalsIgnoreCase(AUTH_URI)) {
+//        if (uri.equalsIgnoreCase(AUTH_URI)) {
+//            return HttpServletResponse.SC_ACCEPTED;
+//        }
+
+        if (uri.startsWith(AUTH_URI)) {
             return HttpServletResponse.SC_ACCEPTED;
         }
 
@@ -52,14 +56,23 @@ public class SecurityFilter implements Filter {
 
             Claims claims = JwtUtil.decodeJwtToken(token);
             String allowedResources = "/";
-            switch(verb) {
-                case "GET"    : allowedResources = (String)claims.get("allowedReadResources");   break;
-                case "POST"   : allowedResources = (String)claims.get("allowedCreateResources"); break;
-                case "PUT"    : allowedResources = (String)claims.get("allowedUpdateResources"); break;
-                case "DELETE" : allowedResources = (String)claims.get("allowedDeleteResources"); break;
+            switch (verb) {
+                case "GET":
+                    allowedResources = (String) claims.get("allowedReadResources");
+                    break;
+                case "POST":
+                    allowedResources = (String) claims.get("allowedCreateResources");
+                    break;
+                case "PUT":
+                    allowedResources = (String) claims.get("allowedUpdateResources");
+                    break;
+                case "DELETE":
+                    allowedResources = (String) claims.get("allowedDeleteResources");
+                    break;
             }
 
             for (String s : allowedResources.split(",")) {
+                // Check if the substring starts with "/"
                 if (!s.trim().startsWith("/")) {
                     continue;
                 }
@@ -70,8 +83,7 @@ public class SecurityFilter implements Filter {
             }
 
             logger.debug(String.format("Verb: %s, allowed resources: %s", verb, allowedResources));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
 

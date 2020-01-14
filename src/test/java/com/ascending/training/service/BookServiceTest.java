@@ -94,4 +94,12 @@ public class BookServiceTest {
         Assert.assertNotNull(book);
     }
 
+    @Test
+    public void getBookById() {
+        Book oldBook = bookService.getBookByTitle("Thinking in Java");
+        Book book = bookService.getBookById(oldBook.getId());
+        System.out.println(book);
+
+        Assert.assertNotNull(book);
+    }
 }

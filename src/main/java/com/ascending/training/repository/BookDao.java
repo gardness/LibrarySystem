@@ -13,5 +13,7 @@ public interface BookDao {
 
     List<Book> getBooks();
 
+    Book getBookById(long bookId);
+
     Book getBookByTitle(String bookTitle);
 }

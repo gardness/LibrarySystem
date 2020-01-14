@@ -29,15 +29,11 @@ public class BookController {
     public Book getBook(@PathVariable(name = "BookTitle") String bookTitle) {
         Book book = bookService.getBookByTitle(bookTitle);
 
-        if (book != null) {
-            return book;
-        }
-
-        return null;
+        return book;
     }
 
 //    @RequestMapping(value = "", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    @PostMapping(value = "", produces = "application/json")
+    @PostMapping(value = "", consumes = "application/json")
     public String createBook(@RequestBody Book book) {
         logger.debug(String.format("Book : %s", book.toString()));
 
@@ -52,7 +48,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public String updateBook(@PathVariable(name = "id") long bookId, @RequestBody Book book) {
         logger.debug(String.format("Book ID : %d, Book : %s", bookId, book.toString()));
 
@@ -68,7 +64,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.DELETE, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @DeleteMapping(value = "/{bookTitle}", produces = "application/json")
+    @DeleteMapping(value = "/{bookTitle}", consumes = "application/json")
     public String deleteBook(@PathVariable String bookTitle) {
         logger.debug("Book title : " + bookTitle);
 

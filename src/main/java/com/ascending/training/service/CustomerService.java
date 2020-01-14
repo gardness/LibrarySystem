@@ -33,4 +33,6 @@ public class CustomerService {
     public Customer getCustomerByName(String customerName) {
         return customerDao.getCustomerByName(customerName);
     }
+
+    public Customer getCustomerById(long customerId) { return customerDao.getCustomerById(customerId); }
 }

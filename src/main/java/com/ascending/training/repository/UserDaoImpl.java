@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
             query.setParameter("email", email.toLowerCase().trim());
             query.setParameter("password", password);
 
-            return query.uniqueResult();
+            return query.uniqueResult() ;
         }
     }
 }

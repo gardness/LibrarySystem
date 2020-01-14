@@ -28,6 +28,8 @@ public class BookService {
         return bookDao.getBooks();
     }
 
+    public Book getBookById(long bookId) { return bookDao.getBookById(bookId);}
+
     public Book getBookByTitle(String bookTitle) {
         return bookDao.getBookByTitle(bookTitle);
     }

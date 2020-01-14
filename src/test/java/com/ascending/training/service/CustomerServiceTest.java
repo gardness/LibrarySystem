@@ -92,4 +92,12 @@ public class CustomerServiceTest {
 
         Assert.assertNotNull(customer);
     }
+
+    @Test
+    public void getCustomerById() {
+        Customer oldCustomer = customerService.getCustomerByName("Joe");
+        Customer customer = customerService.getCustomerById(oldCustomer.getId());
+
+        Assert.assertNotNull(customer);
+    }
 }

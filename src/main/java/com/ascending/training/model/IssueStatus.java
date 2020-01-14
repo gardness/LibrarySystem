@@ -33,30 +33,24 @@ public class IssueStatus {
 
     public IssueStatus(){}
 
-    public IssueStatus(String issueDate, String returnDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-        try {
-            this.issueDate = simpleDateFormat.parse(issueDate);
-            this.returnDate = simpleDateFormat.parse(returnDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        this.id = id;
+    public IssueStatus(Customer customer, Book book) {
+        this.issueDate = new Date();
+        this.customer = customer;
+        this.book = book;
     }
 
-    public IssueStatus(long id, String issueDate, String returnDate) {
+    public IssueStatus(String issueDate, Customer customer, Book book) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
         try {
             this.issueDate = simpleDateFormat.parse(issueDate);
-            this.returnDate = simpleDateFormat.parse(returnDate);
+            this.returnDate = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        this.id = id;
+        this.customer = customer;
+        this.book = book;
     }
 
     public IssueStatus(String issueDate, String returnDate, Customer customer, Book book) {
@@ -101,12 +95,32 @@ public class IssueStatus {
         this.book = book;
     }
 
-    public void setIssueDate(Date issueDate) {
-        this.issueDate = issueDate;
+    public void setIssueDate() {
+        this.issueDate = new Date();
     }
 
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
+    public void setIssueDate(String issueDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        try {
+            this.issueDate = simpleDateFormat.parse(issueDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setReturnDate() {
+        this.returnDate = new Date();
+    }
+
+    public void setReturnDate(String returnDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        try {
+            this.returnDate = simpleDateFormat.parse(returnDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

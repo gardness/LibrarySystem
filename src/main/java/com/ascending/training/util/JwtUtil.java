@@ -8,16 +8,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+
 public class JwtUtil {
     private static Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     private static final String SECRET_KEY = System.getProperty("secret.key");
     private static final String ISSUER = "com.ascending";
     private static final long EXPIRATION_TIME = 86400 * 10000;
+
     public static String generateToken(User user) {
         //JWT signature algorithm using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -37,10 +40,14 @@ public class JwtUtil {
         //String allowedResource = roles.stream().map(role -> role.getAllowedResource()).collect(Collectors.joining(","));
         //claims.put("allowedResource", allowedResource);
         for (Role role : roles) {
-            if (role.isAllowedRead()) allowedReadResources = String.join(role.getAllowedResource(), allowedReadResources, ",");
-            if (role.isAllowedCreate()) allowedCreateResources = String.join(role.getAllowedResource(), allowedCreateResources, ",");
-            if (role.isAllowedUpdate()) allowedUpdateResources = String.join(role.getAllowedResource(), allowedUpdateResources, ",");
-            if (role.isAllowedDelete()) allowedDeleteResources = String.join(role.getAllowedResource(), allowedDeleteResources, ",");
+            if (role.isAllowedRead())
+                allowedReadResources = String.join(role.getAllowedResource(), allowedReadResources, ",");
+            if (role.isAllowedCreate())
+                allowedCreateResources = String.join(role.getAllowedResource(), allowedCreateResources, ",");
+            if (role.isAllowedUpdate())
+                allowedUpdateResources = String.join(role.getAllowedResource(), allowedUpdateResources, ",");
+            if (role.isAllowedDelete())
+                allowedDeleteResources = String.join(role.getAllowedResource(), allowedDeleteResources, ",");
         }
         claims.put("allowedReadResources", allowedReadResources.replaceAll(".$", ""));
         claims.put("allowedCreateResources", allowedCreateResources.replaceAll(".$", ""));
@@ -51,6 +58,7 @@ public class JwtUtil {
         //Builds the JWT and serializes it to a compact, URL-safe string
         return builder.compact();
     }
+
     public static Claims decodeJwtToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))

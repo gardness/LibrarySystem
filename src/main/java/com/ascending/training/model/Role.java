@@ -1,4 +1,3 @@
-
 package com.ascending.training.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,9 +12,7 @@ import java.util.Objects;
 @Table(name = "role")
 public class Role {
     @Id
-    //@SequenceGenerator(name = "role_id_generator", sequenceName = "role_id_seq", allocationSize = 1)
-    //@GeneratedValue(strategy = SEQUENCE, generator = "role_id_generator")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name")
@@ -37,13 +34,6 @@ public class Role {
     private boolean allowedDelete;
 
     @JsonIgnore
-   /*
-   @ManyToMany(fetch = FetchType.EAGER)
-   @JoinTable(name = "users_role",
-           joinColumns = { @JoinColumn(name = "role_id") },
-           inverseJoinColumns = { @JoinColumn(name = "user_id") }
-   )
-   */
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
@@ -113,9 +103,16 @@ public class Role {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         Role role = (Role) o;
+
         return id == role.id &&
                 allowedRead == role.allowedRead &&
                 allowedCreate == role.allowedCreate &&
@@ -134,10 +131,10 @@ public class Role {
     public String toString() {
         ObjectMapper objectMapper = new ObjectMapper();
         String str = null;
+
         try {
             str = objectMapper.writeValueAsString(this);
-        }
-        catch(JsonProcessingException jpe) {
+        } catch (JsonProcessingException jpe) {
             jpe.printStackTrace();
         }
 

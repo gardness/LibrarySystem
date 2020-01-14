@@ -26,7 +26,7 @@ public class AppInitializer extends SpringBootServletInitializer {
 
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Logger logger(InjectionPoint injectionPoint) {
+    public Logger logger (InjectionPoint injectionPoint) {
         return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass());
     }
 

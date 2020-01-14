@@ -126,4 +126,29 @@ public class CustomerDaoImpl implements CustomerDao {
             return customer;
         }
     }
+
+    @Override
+    public Customer getCustomerById(long customerId) {
+        if (customerId < 1) {
+            logger.debug(String.format("Illegal customerId!", customerId));
+
+            return null;
+        }
+
+
+        String hql = "from Customer as ct where ct.id = :customerId";
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Customer> query = session.createQuery(hql);
+            query.setParameter("customerId", customerId);
+
+            Customer customer = query.uniqueResult();
+
+            if (customer != null) {
+                logger.debug(customer.toString());
+            }
+
+            return customer;
+        }
+    }
 }

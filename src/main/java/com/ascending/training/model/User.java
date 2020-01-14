@@ -1,7 +1,7 @@
-
 package com.ascending.training.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -13,9 +13,7 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
     @Id
-    //@SequenceGenerator(name = "user_id_generator", sequenceName = "user_id_seq", allocationSize = 1)
-    //@GeneratedValue(strategy = SEQUENCE, generator = "user_id_generator")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name")
@@ -36,11 +34,10 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    //@ManyToMany(mappedBy = "users", cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "users_role",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private List<Role> roles;
 
@@ -110,9 +107,16 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         User user = (User) o;
+
         return id == user.id &&
                 name.equals(user.name) &&
                 Objects.equals(firstName, user.firstName) &&
@@ -132,8 +136,7 @@ public class User {
 
         try {
             str = objectMapper.writeValueAsString(this);
-        }
-        catch(JsonProcessingException jpe) {
+        } catch (JsonProcessingException jpe) {
             jpe.printStackTrace();
         }
 

@@ -111,6 +111,31 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public Book getBookById(long bookId) {
+        if (bookId < 1) {
+            logger.debug(String.format("Illegal bookId!", bookId));
+
+            return null;
+        }
+
+        String hql = "from Book as bk where bk.id = :bookId";
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Book> query = session.createQuery(hql);
+            query.setParameter("bookId", bookId);
+
+            Book book = query.uniqueResult();
+
+            if (book != null) {
+                logger.debug(book.toString());
+            }
+
+            return book;
+        }
+    }
+
+
+    @Override
     public Book getBookByTitle(String bookTitle) {
         if (bookTitle == null) {
             return null;

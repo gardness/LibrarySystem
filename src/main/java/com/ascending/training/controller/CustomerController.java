@@ -26,14 +26,10 @@ public class CustomerController {
     public Customer getCustomer(@PathVariable String customerName) {
         Customer customer = customerService.getCustomerByName(customerName);
 
-        if (customer != null) {
-            return customer;
-        }
-
-        return null;
+        return customer;
     }
 
-    @PostMapping(value = "", produces = "application/json")
+    @PostMapping(value = "", consumes = "application/json")
     public String createCustomer(@RequestBody Customer customer) {
         logger.debug(String.format("Customer : %s", customer.toString()));
 
@@ -47,7 +43,7 @@ public class CustomerController {
         return msg;
     }
 
-    @PutMapping(value = "/{customerId}", produces = "application/json")
+    @PutMapping(value = "/{customerId}", consumes = "application/json")
     public String updateCustomer(@PathVariable long customerId, @RequestBody Customer customer) {
         logger.debug(String.format("Customer ID : %d, Customer : %s", customerId, customer.toString()));
 
@@ -62,7 +58,7 @@ public class CustomerController {
         return msg;
     }
 
-    @DeleteMapping(value = "/{customerName}", produces = "application/json")
+    @DeleteMapping(value = "/{customerName}", consumes = "application/json")
     public String deleteCustomer(@PathVariable String customerName) {
         logger.debug("Customer name : " + customerName);
 
