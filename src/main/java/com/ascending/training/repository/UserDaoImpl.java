@@ -39,7 +39,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) {
-        String hql = "FROM User as u where lower(u.email) = :email";
+        String hql = "FROM User as u " +
+                "left join fetch u.roles " +
+                "where lower(u.email) = :email";
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<User> query = session.createQuery(hql);
@@ -51,7 +53,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByCredentials(String email, String password) {
-        String hql = "FROM User as u where lower(u.email) = :email and u.password = :password";
+        String hql = "FROM User as u " +
+                "left join fetch u.roles " +
+                "where lower(u.email) = :email and u.password = :password";
         logger.debug(String.format("User email: %s, password: %s", email, password));
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -59,7 +63,7 @@ public class UserDaoImpl implements UserDao {
             query.setParameter("email", email.toLowerCase().trim());
             query.setParameter("password", password);
 
-            return query.uniqueResult() ;
+            return query.uniqueResult();
         }
     }
 }
