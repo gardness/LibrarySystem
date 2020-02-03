@@ -48,7 +48,7 @@ public class FileController {
 
             if (url != null) {
                 msg = String.format("The file name=%s, size=%d was uploaded, url=%s", file.getOriginalFilename(), file.getSize(), url);
-//                messageService.sendMessage(queueName, url);
+                messageService.sendMessage(queueName, url);
                 responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(msg);
             }
 
@@ -82,7 +82,7 @@ public class FileController {
 
             msg = String.format("The file %s was downloaded", resource.getFilename());
             //Send message to SQS
-            //messageService.sendMessage(queueName, msg);
+            messageService.sendMessage(queueName, msg);
             logger.debug(msg);
         } catch (Exception ex) {
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(ex.getMessage());
