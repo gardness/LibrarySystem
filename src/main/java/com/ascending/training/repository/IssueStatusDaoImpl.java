@@ -2,7 +2,9 @@ package com.ascending.training.repository;
 
 import com.ascending.training.model.IssueStatus;
 import com.ascending.training.util.HibernateUtil;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
@@ -16,6 +18,9 @@ import java.util.List;
 public class IssueStatusDaoImpl implements IssueStatusDao {
     @Autowired
     private Logger logger;
+    
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
     public long save(IssueStatus issueStatus) {
@@ -23,7 +28,7 @@ public class IssueStatusDaoImpl implements IssueStatusDao {
         long issueStatusId = 0;
         Boolean isSuccess = true;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             issueStatusId = (long) session.save(issueStatus);
             transaction.commit();
@@ -47,7 +52,7 @@ public class IssueStatusDaoImpl implements IssueStatusDao {
         Transaction transaction = null;
         boolean isSuccess = true;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(issueStatus);
             transaction.commit();
@@ -74,7 +79,7 @@ public class IssueStatusDaoImpl implements IssueStatusDao {
         int deletedCount = 0;
         Transaction transaction = null;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<IssueStatus> query = session.createQuery(hql);
             query.setParameter("issueStatusesId", issueStatusesId);
             transaction = session.beginTransaction();
@@ -98,9 +103,12 @@ public class IssueStatusDaoImpl implements IssueStatusDao {
                 "left join fetch iss.book " +
                 "left join fetch iss.customer ";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<IssueStatus> query = session.createQuery(hql);
             return query.list();
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 
@@ -112,14 +120,20 @@ public class IssueStatusDaoImpl implements IssueStatusDao {
                 "left join fetch iss.customer " +
                 "where iss.id= :issueStatusId";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<IssueStatus> query = session.createQuery(hql);
             query.setParameter("issueStatusId", id);
 
             IssueStatus issueStatus = query.uniqueResult();
-            logger.warn(issueStatus.toString());
+
+            if (issueStatus != null) {
+                logger.warn(issueStatus.toString());
+            }
 
             return issueStatus;
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 }

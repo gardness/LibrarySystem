@@ -64,12 +64,13 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.DELETE, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @DeleteMapping(value = "/{bookTitle}", consumes = "application/json")
+    @DeleteMapping(value = "/{bookTitle}")
     public String deleteBook(@PathVariable String bookTitle) {
         logger.debug("Book title : " + bookTitle);
 
         String msg = "The book was deleted.";
         boolean isSuccess = bookService.delete(bookTitle);
+
         if (!isSuccess) {
             msg = "The book was not deleted.";
         }

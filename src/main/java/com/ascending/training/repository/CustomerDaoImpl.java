@@ -2,7 +2,9 @@ package com.ascending.training.repository;
 
 import com.ascending.training.model.Customer;
 import com.ascending.training.util.HibernateUtil;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
@@ -16,6 +18,9 @@ import java.util.List;
 public class CustomerDaoImpl implements CustomerDao {
     @Autowired
     private Logger logger;
+    
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
     public long save(Customer customer) {
@@ -24,7 +29,7 @@ public class CustomerDaoImpl implements CustomerDao {
         Boolean isSuccess = true;
 
         logger.warn("Before getSessionFactory.openSession().");
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             logger.warn("Enter getSessionFactory.openSession().");
             transaction = session.beginTransaction();
 
@@ -53,7 +58,7 @@ public class CustomerDaoImpl implements CustomerDao {
         Transaction transaction = null;
         Boolean isSuccess = true;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(customer);
             transaction.commit();
@@ -78,7 +83,7 @@ public class CustomerDaoImpl implements CustomerDao {
         int deletedCount = 0;
         Transaction transaction = null;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
             query.setParameter("customerName", customerName);
             transaction = session.beginTransaction();
@@ -100,9 +105,12 @@ public class CustomerDaoImpl implements CustomerDao {
     public List<Customer> getCustomers() {
         String hql = "from Customer as ct " +
                 "left join fetch ct.issueStatuses";
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
             return query.list();
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 
@@ -116,7 +124,7 @@ public class CustomerDaoImpl implements CustomerDao {
                 "left join fetch ct.issueStatuses as is " +
                 "where lower(ct.name) = :customerName";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
             query.setParameter("customerName", customerName.toLowerCase());
 
@@ -124,6 +132,9 @@ public class CustomerDaoImpl implements CustomerDao {
             logger.warn(customer.toString());
 
             return customer;
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 
@@ -135,10 +146,9 @@ public class CustomerDaoImpl implements CustomerDao {
             return null;
         }
 
-
         String hql = "from Customer as ct where ct.id = :customerId";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
             query.setParameter("customerId", customerId);
 
@@ -149,6 +159,9 @@ public class CustomerDaoImpl implements CustomerDao {
             }
 
             return customer;
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 }

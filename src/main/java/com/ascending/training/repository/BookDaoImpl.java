@@ -2,7 +2,9 @@ package com.ascending.training.repository;
 
 import com.ascending.training.model.Book;
 import com.ascending.training.util.HibernateUtil;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
@@ -19,6 +21,9 @@ public class BookDaoImpl implements BookDao {
     @Autowired
     private Logger logger;
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
     @Override
     public long save(Book book) {
         Transaction transaction = null;
@@ -26,7 +31,7 @@ public class BookDaoImpl implements BookDao {
         Boolean isSuccess = true;
 
         logger.warn("Before getSessionFactory.openSession().");
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             logger.warn("Enter getSessionFactory.openSession().");
             transaction = session.beginTransaction();
 
@@ -55,7 +60,7 @@ public class BookDaoImpl implements BookDao {
         Transaction transaction = null;
         Boolean isSuccess = true;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(book);
             transaction.commit();
@@ -80,7 +85,7 @@ public class BookDaoImpl implements BookDao {
         int deletedCount = 0;
         Transaction transaction = null;
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Book> query = session.createQuery(hql);
             query.setParameter("bookTitle", bookTitle);
             transaction = session.beginTransaction();
@@ -104,9 +109,12 @@ public class BookDaoImpl implements BookDao {
     public List<Book> getBooks() {
         String hql = "from Book as bk " +
                 "left join fetch bk.issueStatuses";
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Book> query = session.createQuery(hql);
             return query.list();
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 
@@ -120,7 +128,7 @@ public class BookDaoImpl implements BookDao {
 
         String hql = "from Book as bk where bk.id = :bookId";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Book> query = session.createQuery(hql);
             query.setParameter("bookId", bookId);
 
@@ -129,8 +137,10 @@ public class BookDaoImpl implements BookDao {
             if (book != null) {
                 logger.debug(book.toString());
             }
-
             return book;
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 
@@ -145,7 +155,7 @@ public class BookDaoImpl implements BookDao {
                 "left join fetch bk.issueStatuses as is " +
                 "where lower(bk.title) = :bookTitle";
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Book> query = session.createQuery(hql);
             query.setParameter("bookTitle", bookTitle.toLowerCase());
 
@@ -155,6 +165,9 @@ public class BookDaoImpl implements BookDao {
             }
 
             return book;
+        } catch (HibernateException e){
+            logger.error(String.format("Unable to open session, %s", e.getMessage()));
+            return null;
         }
     }
 }

@@ -58,7 +58,7 @@ public class CustomerController {
         return msg;
     }
 
-    @DeleteMapping(value = "/{customerName}", consumes = "application/json")
+    @DeleteMapping(value = "/{customerName}")
     public String deleteCustomer(@PathVariable String customerName) {
         logger.debug("Customer name : " + customerName);
 
