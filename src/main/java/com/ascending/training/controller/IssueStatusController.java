@@ -86,12 +86,12 @@ public class IssueStatusController {
 
         logger.debug(String.format("Issue Status : %s", issueStatus.toString()));
 
-        String msg = "The issue status has been created.";
+        String msg = "The issue status has been updated.";
 
         boolean isSuccess = issueStatusService.update(issueStatus);
 
         if (isSuccess == false) {
-            msg = "The issue status has not been created.";
+            msg = "The issue status has not been updated.";
         }
 
         return msg;
