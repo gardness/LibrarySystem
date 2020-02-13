@@ -32,26 +32,34 @@ public class FileService {
         Bucket bucket = null;
 
         if (amazonS3.doesBucketExistV2(bucketName)) {
-            System.out.format("Bucket %s already exists.\n", bucketName);
+            logger.info(String.format("Bucket %s already exists.\n", bucketName));
             bucket = getBucket(bucketName);
         } else {
             try {
                 bucket = amazonS3.createBucket(bucketName);
             } catch (AmazonS3Exception e) {
-                System.err.println(e.getErrorMessage());
+                logger.error(e.getErrorMessage());
             }
         }
 
         return bucket;
     }
 
-    // Remove objects from an unversioned bucket before deleting it
-    public void deleteAnUnversionedBucket(String bucketName) {
-        System.out.println("Deleting S3 bucket: " + bucketName);
-        System.out.println("The bucket location is " + amazonS3.getBucketLocation(bucketName));
+    // Remove an unemptied and unversioned bucket
+    public boolean deleteAnUnversionedBucket(String bucketName) {
+        boolean isSuccess = false;
+
+        if (!amazonS3.doesBucketExistV2(bucketName)) {
+            logger.info(String.format("Bucket %s doesn't exist.\n", bucketName));
+
+            return isSuccess;
+        }
+
+        logger.info("Deleting S3 bucket: " + bucketName);
+        logger.info("The bucket location is " + amazonS3.getBucketLocation(bucketName));
 
         try {
-            System.out.println(" - Removing objects from bucket");
+            logger.info(" - Removing objects from bucket");
             ObjectListing object_listing = amazonS3.listObjects(bucketName);
 
             while (true) {
@@ -69,7 +77,7 @@ public class FileService {
                 }
             }
 
-            System.out.println(" - Removing versions from bucket");
+            logger.info(" - Removing versions from bucket");
 
             VersionListing version_listing = amazonS3.listVersions(
                     new ListVersionsRequest().withBucketName(bucketName));
@@ -89,15 +97,18 @@ public class FileService {
                 }
             }
 
-            System.out.println("Bucket is ready to be deleted.");
+            logger.info("Bucket is ready to be deleted.");
 
             amazonS3.deleteBucket(bucketName);
         } catch (AmazonServiceException e) {
-            System.err.println(e.getErrorMessage());
-            System.exit(1);
+            logger.error(e.getErrorMessage());
+            return isSuccess;
         }
 
-        System.out.println("Bucket deleted.");
+        isSuccess = true;
+        logger.info("Bucket deleted.");
+
+        return isSuccess;
     }
 
     public boolean doesBucketExist(String bucketName) {
@@ -138,11 +149,11 @@ public class FileService {
 
     public String uploadFile(String bucketName, MultipartFile file) throws IOException {
         try {
-            if (amazonS3.doesObjectExist(bucketName, file.getOriginalFilename())) {
-                logger.debug(String.format("The bucket location is %s", amazonS3.getBucketLocation(bucketName)));
-                logger.debug(String.format("The file '%s' exists in the bucket %s", file.getOriginalFilename(), bucketName));
-                return null;
-            }
+//            if (amazonS3.doesObjectExist(bucketName, file.getOriginalFilename())) {
+//                logger.debug(String.format("The bucket location is %s", amazonS3.getBucketLocation(bucketName)));
+//                logger.debug(String.format("The file '%s' exists in the bucket %s", file.getOriginalFilename(), bucketName));
+//                return null;
+//            }
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(file.getContentType());

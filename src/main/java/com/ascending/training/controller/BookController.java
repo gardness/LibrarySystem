@@ -68,11 +68,11 @@ public class BookController {
     public String deleteBook(@PathVariable String bookTitle) {
         logger.debug("Book title : " + bookTitle);
 
-        String msg = "The book was deleted.";
+        String msg = "The book has been deleted.";
         boolean isSuccess = bookService.delete(bookTitle);
 
         if (!isSuccess) {
-            msg = "The book was not deleted.";
+            msg = "The book has not been deleted.";
         }
 
         return msg;

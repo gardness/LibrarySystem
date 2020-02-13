@@ -1,5 +1,6 @@
 package com.ascending.training.controller;
 
+import com.amazonaws.services.s3.model.Bucket;
 import com.ascending.training.service.FileService;
 import com.ascending.training.service.MessageService;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = {"/files"})
@@ -83,11 +85,47 @@ public class FileController {
             msg = String.format("The file %s was downloaded", resource.getFilename());
             //Send message to SQS
             messageService.sendMessage(queueName, msg);
-            logger.debug(msg);
+            logger.info(msg);
         } catch (Exception ex) {
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(ex.getMessage());
-            logger.debug(ex.getMessage());
+            logger.error(ex.getMessage());
         }
+
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/{bucketName}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteBucket(@PathVariable String bucketName) {
+        String msg = String.format("Unable to delete bucket %s.", bucketName);
+        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_ACCEPTABLE).body(msg);
+
+        boolean isSuccess = fileService.deleteAnUnversionedBucket(bucketName);
+
+        if (isSuccess) {
+            msg = String.format("Bucket %s has been deleted.", bucketName);
+            responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(msg);
+            messageService.sendMessage(queueName, msg);
+        }
+
+        logger.info(msg);
+
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Object> createBucket(@RequestBody Map<String, String> map) {
+        String msg = String.format("Bucket %s can't be created.", map.get("bucketName"));
+        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_ACCEPTABLE).body(msg);
+
+        Bucket bucket = fileService.createBucket(map.get("bucketName"));
+
+        if (bucket != null) {
+            msg = String.format("Bucket %s has been created successfully.", map.get("bucketName"));
+            responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(msg);
+            messageService.sendMessage(queueName, msg);
+        }
+
+        logger.info(msg);
 
         return responseEntity;
     }
