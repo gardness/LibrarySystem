@@ -1,25 +1,24 @@
 package com.ascending.training.repository;
 
+import com.ascending.training.init.AppInitializer;
 import com.ascending.training.model.Customer;
 import org.junit.*;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppInitializer.class)
 public class CustomerDaoTest {
-    private static CustomerDao customerDao;
-    private static Logger logger = LoggerFactory.getLogger(CustomerDaoTest.class);
-
-    @BeforeClass
-    public static void beforeClass() {
-        customerDao = new CustomerDaoImpl();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        customerDao = null;
-    }
+    @Autowired
+    private CustomerDao customerDao;
+    @Autowired
+    private Logger logger;
 
     @Before
     public void before() {
@@ -74,6 +73,7 @@ public class CustomerDaoTest {
 
         Assert.assertEquals(true, ret);
 
+        customerDao.delete(updatedCustomer.getName());
         logger.info("Fourth Test!");
     }
 

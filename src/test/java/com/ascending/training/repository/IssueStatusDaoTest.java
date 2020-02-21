@@ -1,37 +1,37 @@
 package com.ascending.training.repository;
 
+import com.ascending.training.init.AppInitializer;
 import com.ascending.training.model.Book;
 import com.ascending.training.model.Customer;
 import com.ascending.training.model.IssueStatus;
 import org.junit.*;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppInitializer.class)
 public class IssueStatusDaoTest {
-    private static IssueStatusDao issueStatusDao;
-    private static BookDao bookDao;
-    private static CustomerDao customerDao;
-    private static Logger logger = LoggerFactory.getLogger(CustomerDaoTest.class);
+    @Autowired
+    private IssueStatusDao issueStatusDao;
+    @Autowired
+    private BookDao bookDao;
+    @Autowired
+    private CustomerDao customerDao;
+    @Autowired
+    private Logger logger;
+
     private Customer fCustomer;
     private Customer sCustomer;
     private Book fNewBook;
     private Book sNewBook;
     private IssueStatus fIssueStatus;
     private IssueStatus sIssueStatus;
-
-    @BeforeClass
-    public static void beforeClass() {
-        issueStatusDao = new IssueStatusDaoImpl();
-        bookDao = new BookDaoImpl();
-        customerDao = new CustomerDaoImpl();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        issueStatusDao = null;
-    }
 
     @Before
     public void before() {
@@ -56,8 +56,12 @@ public class IssueStatusDaoTest {
 
     @After
     public void after() {
-        Boolean fret = issueStatusDao.delete(fCustomer.getId());
-        Boolean sret = issueStatusDao.delete(sCustomer.getId());
+        issueStatusDao.delete(fIssueStatus.getId());
+        issueStatusDao.delete(sIssueStatus.getId());
+        bookDao.delete(fNewBook.getTitle());
+        bookDao.delete(sNewBook.getTitle());
+        customerDao.delete(fCustomer.getName());
+        customerDao.delete(sCustomer.getName());
     }
 
     @Test
@@ -93,7 +97,7 @@ public class IssueStatusDaoTest {
 
     @Test
     public void delete() {
-        Boolean ret = issueStatusDao.delete(fCustomer.getId());
+        Boolean ret = issueStatusDao.delete(fIssueStatus.getId());
 
         Assert.assertEquals(true, ret);
 
@@ -120,13 +124,14 @@ public class IssueStatusDaoTest {
         Assert.assertEquals(true, ret);
 
         issueStatusDao.delete(updatedIssueStatus.getId());
-
+        bookDao.delete(updatedBook.getTitle());
+        customerDao.delete(updatedCustomer.getName());
         logger.info("Fourth Test!");
     }
 
     @Test
     public void getIssueStatusById() {
-        IssueStatus issueStatus = issueStatusDao.getIssueStatusById(fCustomer.getId());
+        IssueStatus issueStatus = issueStatusDao.getIssueStatusById(fIssueStatus.getId());
 
         Assert.assertNotNull(issueStatus);
     }

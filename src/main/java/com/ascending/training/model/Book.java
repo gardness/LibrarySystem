@@ -66,17 +66,6 @@ public class Book {
     }
 
     public Set<IssueStatus> getIssueStatuses() {
-//        try {
-//            int size = issueStatuses.size();
-//
-//            if (size == 0) {
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-
         return issueStatuses;
     }
 
