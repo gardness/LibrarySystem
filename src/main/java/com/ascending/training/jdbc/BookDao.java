@@ -69,52 +69,14 @@ public class BookDao {
         try {
             conn = DriverManager.getConnection(dbURL, username, password);
 
-            String sql = "INSERT INTO books (id, title, category, rental_price, status) " +
-                    "VALUES (?, ?, ?, ?, ?)";
-
-            ps = conn.prepareStatement(sql);
-            ps.setLong(1, book.getId());
-            ps.setString(2, book.getTitle());
-            ps.setString(3, book.getCategory());
-            ps.setDouble(4, book.getRentalPrice());
-            ps.setBoolean(5, book.getStatus());
-
-            status = ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-
-        return status;
-    }
-
-    public int update(Book book) {
-        int status = 0;
-        Connection conn = null;
-        PreparedStatement ps = null;
-
-        try {
-            conn = DriverManager.getConnection(dbURL, username, password);
-
-            String sql = "UPDATE books SET title=?, category=?, rental_price=?, status=? WHERE id=?";
+            String sql = "INSERT INTO books (title, category, rental_price, status) " +
+                    "VALUES (?, ?, ?, ?)";
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getCategory());
             ps.setDouble(3, book.getRentalPrice());
             ps.setBoolean(4, book.getStatus());
-            ps.setLong(5, book.getId());
 
             status = ps.executeUpdate();
 
@@ -136,7 +98,7 @@ public class BookDao {
         return status;
     }
 
-    public int delete(long id) {
+    public int update(String oldBookTitle, Book book) {
         int status = 0;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -144,10 +106,47 @@ public class BookDao {
         try {
             conn = DriverManager.getConnection(dbURL, username, password);
 
-            String sql = "DELETE FROM books WHERE id=?";
+            String sql = "UPDATE books SET title=?, category=?, rental_price=?, status=? WHERE title=?";
 
             ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getCategory());
+            ps.setDouble(3, book.getRentalPrice());
+            ps.setBoolean(4, book.getStatus());
+            ps.setString(5, oldBookTitle);
+
+            status = ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+
+        return status;
+    }
+
+    public int delete(String bookTitle) {
+        int status = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DriverManager.getConnection(dbURL, username, password);
+
+            String sql = "DELETE FROM books WHERE title=?";
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, bookTitle);
 
             status = ps.executeUpdate();
 
