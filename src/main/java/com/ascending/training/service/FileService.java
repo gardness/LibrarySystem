@@ -149,11 +149,11 @@ public class FileService {
 
     public String uploadFile(String bucketName, MultipartFile file) throws IOException {
         try {
-//            if (amazonS3.doesObjectExist(bucketName, file.getOriginalFilename())) {
-//                logger.debug(String.format("The bucket location is %s", amazonS3.getBucketLocation(bucketName)));
-//                logger.debug(String.format("The file '%s' exists in the bucket %s", file.getOriginalFilename(), bucketName));
-//                return null;
-//            }
+            if (amazonS3.doesObjectExist(bucketName, file.getOriginalFilename())) {
+                logger.debug(String.format("The bucket location is %s", amazonS3.getBucketLocation(bucketName)));
+                logger.debug(String.format("The file '%s' exists in the bucket %s", file.getOriginalFilename(), bucketName));
+                return null;
+            }
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(file.getContentType());
