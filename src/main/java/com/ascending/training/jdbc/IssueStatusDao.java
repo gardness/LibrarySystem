@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.Date;
 
 public class IssueStatusDao {
-    static final String DB_URL = "jdbc:postgresql://localhost:5433/mylibrarysystem_db";
-    static final String USER = "admin";
-    static final String PASS = "12345678";
+    static final String dbURL = System.getProperty("database.url");
+    static final String username = System.getProperty("database.user");
+    static final String password = System.getProperty("database.password");
 
     public List<IssueStatus> getIssueStatus() {
         List<IssueStatus> issueStatuses = new ArrayList<>();
@@ -19,7 +19,7 @@ public class IssueStatusDao {
 
         try {
             System.out.println("Connecting to database ...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = DriverManager.getConnection(dbURL, username, password);
 
             System.out.println("Creating statement ...");
             stmt = conn.createStatement();

@@ -8,9 +8,9 @@ import java.sql.*;
 import java.util.*;
 
 public class CustomerDao {
-    static final String dbURL = "jdbc:postgresql://localhost:5433/mylibrarysystem_db";
-    static final String username = "admin";
-    static final String password = "12345678";
+    static final String dbURL = System.getProperty("database.url");
+    static final String username = System.getProperty("database.user");
+    static final String password = System.getProperty("database.password");
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
