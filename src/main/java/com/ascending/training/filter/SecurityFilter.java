@@ -12,11 +12,14 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebFilter(filterName = "securityFilter", urlPatterns = {"/*"}, dispatcherTypes = {DispatcherType.REQUEST})
 public class SecurityFilter implements Filter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static String AUTH_URI = "/auth";
+    private static List<String> authList = Arrays.asList(AUTH_URI, "/healthcheck");
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -46,7 +49,7 @@ public class SecurityFilter implements Filter {
 //            return HttpServletResponse.SC_ACCEPTED;
 //        }
 
-        if (uri.startsWith(AUTH_URI)) {
+        if (uri.startsWith(AUTH_URI) || authList.contains(uri)) {
             return HttpServletResponse.SC_ACCEPTED;
         }
 

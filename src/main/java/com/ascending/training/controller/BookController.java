@@ -5,6 +5,8 @@ import com.ascending.training.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Cacheable(value = "books")
     @GetMapping(value = "/{BookTitle}", produces = "application/json")
     public Book getBook(@PathVariable(name = "BookTitle") String bookTitle) {
         Book book = bookService.getBookByTitle(bookTitle);
@@ -33,6 +36,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @CachePut(value = "books", key = "#book.id", unless = "#book.title == null")
     @PostMapping(value = "", consumes = "application/json")
     public String createBook(@RequestBody Book book) {
         logger.debug(String.format("Book : %s", book.toString()));
