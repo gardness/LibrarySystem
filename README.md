@@ -17,8 +17,8 @@ Deploy PostgreSQL on a Docker container
 
 Use Flyway database migration tool to create your database schema.
 
-	mvn flyway:clean -Ddb_url=[DATABASE_URL] -Ddb_username=[DATABASE_USERNAME] -Ddb_password=[DATABASE_PASSWORD]
-	mvn flyway:migrate -Ddb_url=[DATABASE_URL] -Ddb_username=[DATABASE_USERNAME] -Ddb_password=[DATABASE_PASSWORD]
+	mvn flyway:clean -Ddb_url=[DATABASE_URL]:[PORT_NUMBER]/[DATABASE_NAME] -Ddb_username=[DATABASE_USERNAME] -Ddb_password=[DATABASE_PASSWORD]
+	mvn flyway:migrate -Ddb_url=[DATABASE_URL]:[PORT_NUMBER]/[DATABASE_NAME] -Ddb_username=[DATABASE_USERNAME] -Ddb_password=[DATABASE_PASSWORD]
   
 Set your environment variables in your IDE
 
