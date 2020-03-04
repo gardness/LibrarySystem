@@ -51,8 +51,9 @@ Find this container's internal IP address
 Create your database schema within this container and make sure all of your unit tests are successful
 
 ```bash
-  mvn clean compile flyway:migrate -P unit -Ddb_url=localhost ...
-  mvn test -Ddb_url=localhost ...
+  mvn clean compile flyway:migrate -Ddb_url=[LOCALHOST_URL]:[PORT_NUMBER]/[DATABASE_NAME] -Ddb_username=[USERNAME] -Ddb_password=[PASSWORD]
+  
+  mvn test -Ddatabase.driver=org.postgresql.Driver -Ddatabase.dialect=org.hibernate.dialect.PostgreSQL9Dialect -Ddatabase.url=jdbc:postgresql://[LOCALHOST_URL]:[PORT_NUMBER]/[DATABASE_NAME] -Ddatabase.user=[USERNAME] -Ddatabase.password=[PASSWORD] -Dlogging.level.org.springframework=INFO -Dlogging.level.com.ascending=INFO -Dsecret.key=[SECRET_KEY] -Daws.accessKeyId=[AWS_ACCESSKEYID] -Daws.secretKey=[AWS_SECRETKEY]
 ```
 
 Take the compiled code and package it in its distributable format, such as a JAR.
