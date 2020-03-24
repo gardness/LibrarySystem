@@ -70,12 +70,13 @@ In order to gain access to your target URI, the first thing you need to do is to
 
 By default, the manager user has the access to all APIs, details are listed below :
 
+```bash
 Name : 'rhang'
 Password : '25f9e794323b453885f5181f1b624d0b'
 First Name : 'Ryo'
 Last Name : 'Hang'
 Email : 'rhang@ascending.com'
-
+```
 
 
 
