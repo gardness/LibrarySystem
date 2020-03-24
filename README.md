@@ -61,3 +61,14 @@ Take the compiled code and package it in its distributable format, such as a JAR
 ```bash
   mvn compile package -DskipTests=true -q
 ```
+
+
+## A few more things concerning URI :
+
+In order to gain access to your target URI, the first thing you need to do is to get a new JSON Web Token from "/auth" URI. Once you have that, you can add that to your API requests and the server will respond to your request based on your authorization.
+
+
+
+
+
+
