@@ -1,6 +1,6 @@
 # Library System
 
-An online library system built using JAVA and SpringBoot Framework, integrated with third-party serivces such as AWS S3 and SQS.
+Build an online library system using JAVA, SpringBoot Framework, and third-party serivces such as AWS S3 and AWS SQS.
 
 ## Building Library System
 
