@@ -66,7 +66,7 @@ Take the compiled code and package it in its distributable format, such as a JAR
 
 ## A few more things concerning URI :
 
-In order to gain access to your target URI, the first thing you need to do is to get a new JSON Web Token from "/auth" URI. Once you have that, you can add that to your API requests and the server will respond to your request based on your authorization.
+There is a health check URI '/healthcheck' in this project that can bypass the authorization & authentication process to make sure the server is up and functioning. However if you want to gain access to a target URI which is not the health check URI, the first thing you need to do is to get a new JSON Web Token from "/auth" URI. Once you have that, you can add that to your API requests and the server will respond to your request based on your authorization.
 
 By default, the manager user has the access to all APIs, details are listed below :
 
@@ -77,7 +77,6 @@ First Name : 'Ryo'
 Last Name : 'Hang'
 Email : 'rhang@ascending.com'
 ```
-
 
 
 
