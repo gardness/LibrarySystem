@@ -64,19 +64,93 @@ Take the compiled code and package it in its distributable format, such as a JAR
 
 
 
-## A few more things concerning URI :
+## Request & Response Examples
 
-There is a health check URI '/healthcheck' in this project that can bypass the whole authorization & authentication process to make sure the server is up and running. If you want to gain access to a target URI which is not the health check URI, however, the first thing you need to do is to get a new JSON Web Token from "/auth" URI. Once you have that, you can add that to your API requests and the server will respond to your request based on your authorization.
+### API Resources
 
-By default, the manager user has the access to all APIs, details are listed below :
+  - [GET /healthcheck] (#get healthcheck info)
+  - [GET /auth] (#get a new JSON Web Token)
+  
+  - [GET /books] (#get the current book list)
+  - [GET /books/{$bookTitle}] (#get info on the book with a specific book title)
+  - [PUT /books/{$bookId}] (#update info on the book with a specific book ID)
+  - [POST /books] (#create info on a new book)
+  - [DEL /books/{$bookTitle}] (#delete info on the book with a specific book title)
+  
+  - [GET /customers/{$customerName}] (#get info on the book with a specific book title)
+  - [PUT /customers/{$customerId}] (#update info on the book with a specific book ID)
+  - [POST /books] (#create info on a new book)
+  - [DEL /books/{$bookTitle}] (#delete info on the book with a specific book title)
+  
+  - [POST /magazines/[id]/articles](#post-magazinesidarticles)
+  /books/Thinking in Java
 
-```bash
-Name : 'rhang'
-Password : '25f9e794323b453885f5181f1b624d0b'
-First Name : 'Ryo'
-Last Name : 'Hang'
-Email : 'rhang@ascending.com'
-```
+### GET /magazines
+
+Example: http://example.gov/api/v1/magazines.json
+
+Response body:
+
+    {
+        "metadata": {
+            "resultset": {
+                "count": 123,
+                "offset": 0,
+                "limit": 10
+            }
+        },
+        "results": [
+            {
+                "id": "1234",
+                "type": "magazine",
+                "title": "Public Water Systems",
+                "tags": [
+                    {"id": "125", "name": "Environment"},
+                    {"id": "834", "name": "Water Quality"}
+                ],
+                "created": "1231621302"
+            },
+            {
+                "id": 2351,
+                "type": "magazine",
+                "title": "Public Schools",
+                "tags": [
+                    {"id": "125", "name": "Elementary"},
+                    {"id": "834", "name": "Charter Schools"}
+                ],
+                "created": "126251302"
+            }
+            {
+                "id": 2351,
+                "type": "magazine",
+                "title": "Public Schools",
+                "tags": [
+                    {"id": "125", "name": "Pre-school"},
+                ],
+                "created": "126251302"
+            }
+        ]
+    }
+
+### GET /magazines/[id]
+
+Example: http://example.gov/api/v1/magazines/[id].json
+
+Response body:
+
+    {
+        "id": "1234",
+        "type": "magazine",
+        "title": "Public Water Systems",
+        "tags": [
+            {"id": "125", "name": "Environment"},
+            {"id": "834", "name": "Water Quality"}
+        ],
+        "created": "1231621302"
+    }
+
+
+
 
 
 
