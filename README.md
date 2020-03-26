@@ -72,18 +72,25 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [GET /auth] (#get a new JSON Web Token)
   
   - [GET /books] (#get the current book list)
-  - [GET /books/{$bookTitle}] (#get info on the book with a specific book title)
-  - [PUT /books/{$bookId}] (#update info on the book with a specific book ID)
+  - [GET /books/{$bookTitle}] (#get info on the book with the book title)
+  - [PUT /books/{$bookId}] (#update info on the book with the book ID)
   - [POST /books] (#create info on a new book)
-  - [DEL /books/{$bookTitle}] (#delete info on the book with a specific book title)
+  - [DEL /books/{$bookTitle}] (#delete info on the book with the book title)
   
-  - [GET /customers/{$customerName}] (#get info on the book with a specific book title)
-  - [PUT /customers/{$customerId}] (#update info on the book with a specific book ID)
-  - [POST /books] (#create info on a new book)
-  - [DEL /books/{$bookTitle}] (#delete info on the book with a specific book title)
+  - [GET /customers] (#get the current customer list)
+  - [GET /customers/{$customerName}] (#get info on the customer with the customer name)
+  - [PUT /customers/{$customerId}] (#update info on the customer with the customer ID)
+  - [POST /customers] (#create info on a new customer)
+  - [DEL /customers/{$customerName}] (#delete info on the customer with the customer name)
   
-  - [POST /magazines/[id]/articles](#post-magazinesidarticles)
-  /books/Thinking in Java
+  - [GET /issuestatuses] (#get the current issue status list)
+  - [GET /issuestatuses/{$issuestatusesId}] (#get info on the issue status with the issue status ID)
+  - [PUT /customers/{$customerId}] (#update info on the customer with the customer ID)
+  - [POST /issuestatuses?bookId={$bookId}&customerId=1&issueDate=01/01/2020] (#create info on a new customer)
+  - [DEL /customers/{$customerName}] (#delete info on the customer with the customer name)
+
+
+
 
 ### GET /magazines
 
