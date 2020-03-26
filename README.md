@@ -71,8 +71,6 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [GET /healthcheck] (#get healthcheck info)
   - [GET /auth] (#get a new JSON Web Token)
 
-	 <br />
-	 <br />
 
   - [GET /books] (#get the current book list)
   - [GET /books/{$bookTitle}] (#get info on the book with the provided book title)
@@ -80,8 +78,7 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [POST /books] (#create info on a new book)
   - [DEL /books/{$bookTitle}] (#delete info on the book with the provided book title)
 
-		 <br />
-		 <br />
+
 
   - [GET /customers] (#get the current customer list)
   - [GET /customers/{$customerName}] (#get info on the customer with the provided customer name)
@@ -89,8 +86,6 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [POST /customers] (#create info on a new customer)
   - [DEL /customers/{$customerName}] (#delete info on the customer with the provided customer name)
 
-		 <br />
-		 <br />
 
   - [GET /issuestatuses] (#get the current issue status list)
   - [GET /issuestatuses/{$issuestatusesId}] (#get info on the issue status with the provided issue status ID)
@@ -98,20 +93,17 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [POST /issuestatuses?bookId={$bookId}&customerId={customerId}&issueDate={mm/dd/yyyy}] (#create info on a new issue status)
   - [DEL /issuestatuses/issueStatusId={$issuestatusesId}] (#delete info on the issue status with the provided issue status ID)
 
-		 <br />
-		 <br />
+
 
 	- [DEL /files/{$AWS_S3BucketName}] (#delete the bucket with the provided bucket name)
 	- [POST /files] (#create a new bucket with the bucket name provided in the request body)
 
-		 <br />
-		 <br />
+
 
 	- [GET /files] (#download the file from the local server, for local testing only)
   - [POST /files/{$AWS_S3BucketName}] (#upload the files to the S3 bucket with the provided bucket name)
 
-		 <br />
-		 <br />
+
 
 ### GET /healthcheck
 
