@@ -69,14 +69,14 @@ Take the compiled code and package it in its distributable format, such as a JAR
 ### API Resources
 
   - [GET /healthcheck] (#get healthcheck info)
-  - [GET /auth] (#get a new JSON Web Token)
+  - [GET /auth] (#get a new JSON Web Token)<br /><br />
 
 
   - [GET /books] (#get the current book list)
   - [GET /books/{$bookTitle}] (#get info on the book with the provided book title)
   - [PUT /books/{$bookId}] (#update info on the book with the provided book ID)
   - [POST /books] (#create info on a new book)
-  - [DEL /books/{$bookTitle}] (#delete info on the book with the provided book title)
+  - [DEL /books/{$bookTitle}] (#delete info on the book with the provided book title)<br /><br />
 
 
 
@@ -84,24 +84,21 @@ Take the compiled code and package it in its distributable format, such as a JAR
   - [GET /customers/{$customerName}] (#get info on the customer with the provided customer name)
   - [PUT /customers/{$customerId}] (#update info on the customer with the provided customer ID)
   - [POST /customers] (#create info on a new customer)
-  - [DEL /customers/{$customerName}] (#delete info on the customer with the provided customer name)
+  - [DEL /customers/{$customerName}] (#delete info on the customer with the provided customer name)<br /><br />
 
 
   - [GET /issuestatuses] (#get the current issue status list)
   - [GET /issuestatuses/{$issuestatusesId}] (#get info on the issue status with the provided issue status ID)
   - [PUT /issuestatuses?bookId={$bookId}&customerId={customerId}] (#update info on the issue status with the provided issue status ID)
   - [POST /issuestatuses?bookId={$bookId}&customerId={customerId}&issueDate={mm/dd/yyyy}] (#create info on a new issue status)
-  - [DEL /issuestatuses/issueStatusId={$issuestatusesId}] (#delete info on the issue status with the provided issue status ID)
+  - [DEL /issuestatuses/issueStatusId={$issuestatusesId}] (#delete info on the issue status with the provided issue status ID)<br /><br />
 
 
 
-	- [DEL /files/{$AWS_S3BucketName}] (#delete the bucket with the provided bucket name)
-	- [POST /files] (#create a new bucket with the bucket name provided in the request body)
-
-
-
-	- [GET /files] (#download the file from the local server, for local testing only)
-  - [POST /files/{$AWS_S3BucketName}] (#upload the files to the S3 bucket with the provided bucket name)
+  - [DEL /files/{$AWS_S3BucketName}] (#delete the bucket with the provided bucket name)
+  - [POST /files] (#create a new bucket with the bucket name provided in the request body)
+  - [GET /files] (#download the file from the local server, for local testing only)
+  - [POST /files/{$AWS_S3BucketName}] (#upload the files to the S3 bucket with the provided bucket name)<br /><br />
 
 
 
