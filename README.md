@@ -69,7 +69,7 @@ Take the compiled code and package it in its distributable format, such as a JAR
 ### API Resources
 
   - [GET /healthcheck] (#get healthcheck info, no authorization required)
-  - [GET /auth] (#get a new JSON Web Token for authorization, all URIs except '/auth' & '/healthcheck' require authorization)<br /><br />
+  - [GET /auth] (#get a new JSON Web Token for authorization, _**all URIs except '/auth' & '/healthcheck' require authorization**_)<br /><br />
 
 
   - [GET /books] (#get the current book list)
