@@ -27,7 +27,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "/{bookTitle}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    @Cacheable(value = "books")
+//    @Cacheable(value = "books")
     @GetMapping(value = "/{BookTitle}", produces = "application/json")
     public Book getBook(@PathVariable(name = "BookTitle") String bookTitle) {
         Book book = bookService.getBookByTitle(bookTitle);
@@ -36,7 +36,7 @@ public class BookController {
     }
 
 //    @RequestMapping(value = "", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    @CachePut(value = "books", key = "#book.id", unless = "#book.title == null")
+//    @CachePut(value = "books", key = "#book.id", unless = "#book.title == null")
     @PostMapping(value = "", consumes = "application/json")
     public String createBook(@RequestBody Book book) {
         logger.debug(String.format("Book : %s", book.toString()));
