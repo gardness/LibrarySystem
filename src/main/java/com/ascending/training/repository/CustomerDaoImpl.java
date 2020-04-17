@@ -132,10 +132,11 @@ public class CustomerDaoImpl implements CustomerDao {
             logger.warn(customer.toString());
 
             return customer;
-        } catch (HibernateException e){
+        } catch (Exception e){
             logger.error(String.format("Unable to open session, %s", e.getMessage()));
-            return null;
         }
+
+        return null;
     }
 
     @Override
