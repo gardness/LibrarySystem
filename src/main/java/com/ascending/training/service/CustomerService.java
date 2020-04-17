@@ -31,7 +31,18 @@ public class CustomerService {
     }
 
     public Customer getCustomerByName(String customerName) {
-        return customerDao.getCustomerByName(customerName);
+        List<Customer> customers = customerDao.getCustomers();
+        int i = 0;
+
+        while (!customerName.equals(customers.get(i).getName())) {
+            ++i;
+        }
+
+        if (customerName.equals(customers.get(i).getName())) {
+            return customers.get(i);
+        }
+
+        return null;
     }
 
     public Customer getCustomerById(long customerId) { return customerDao.getCustomerById(customerId); }
