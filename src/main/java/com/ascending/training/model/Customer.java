@@ -65,4 +65,21 @@ public class Customer {
         return String.format(id + ", " + name + ", " + address);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Customer)) {
+            return false;
+        }
+
+        Customer other = (Customer) o;
+        boolean nameEquals = (this.name == null && other.name == null)
+                || (this.name != null && this.name.equals(other.name));
+        boolean addressEquals = (this.address == null && other.name == null)
+                || (this.address != null && this.address.equals(other.address));
+
+        return nameEquals && addressEquals;
+    }
 }

@@ -23,9 +23,9 @@ public class CustomerDaoTest {
     @Before
     public void before() {
         Customer fCustomer = new Customer("Timothy", "255 A St NE, Washington, DC");
-        long fRet = customerDao.save(fCustomer);
+        customerDao.save(fCustomer);
         Customer sCustomer = new Customer("Joe", "6787 Washington Blvd, Arlington, VA");
-        long sRet = customerDao.save(sCustomer);
+        customerDao.save(sCustomer);
     }
 
     @After
@@ -37,8 +37,8 @@ public class CustomerDaoTest {
     @Test
     public void save() {
         Customer newCustomer = new Customer("Kenton", "2111 Jefferson Davis Hwy APT 703N, Arlington, VA");
-        long ret = customerDao.save(newCustomer);
-        Assert.assertNotNull(ret);
+        boolean ret = customerDao.save(newCustomer);
+        Assert.assertTrue(ret);
 
         customerDao.delete(newCustomer.getName());
         logger.info("First Test!");
@@ -79,7 +79,7 @@ public class CustomerDaoTest {
 
     @Test
     public void getCustomerByName() {
-        Customer customer = customerDao.getCustomerByName("Joe");
+        List<Customer> customer = customerDao.getCustomerByName("Joe");
 
         Assert.assertNotNull(customer);
     }

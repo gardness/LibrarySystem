@@ -14,7 +14,7 @@ public class CustomerService {
     @Autowired
     private CustomerDao customerDao;
 
-    public long save(Customer customer) {
+    public boolean save(Customer customer) {
         return customerDao.save(customer);
     }
 
@@ -30,19 +30,8 @@ public class CustomerService {
         return customerDao.getCustomers();
     }
 
-    public Customer getCustomerByName(String customerName) {
-        List<Customer> customers = customerDao.getCustomers();
-        int i = 0;
-
-        while (!customerName.equals(customers.get(i).getName())) {
-            ++i;
-        }
-
-        if (customerName.equals(customers.get(i).getName())) {
-            return customers.get(i);
-        }
-
-        return null;
+    public List<Customer> getCustomerByName(String customerName) {
+        return customerDao.getCustomerByName(customerName);
     }
 
     public Customer getCustomerById(long customerId) { return customerDao.getCustomerById(customerId); }

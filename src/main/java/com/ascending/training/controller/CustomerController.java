@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -20,20 +22,41 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping(value = "", produces = "application/json")
+    @GetMapping(value = "")
     public List<Customer> getCustomers() {
         return customerService.getCustomers();
     }
 
-    @GetMapping(value = "/{customerName}", produces = "application/json")
-    public ResponseEntity getCustomer(@PathVariable String customerName) {
-        Customer customer = customerService.getCustomerByName(customerName);
-        String msg = "Customer " + customerName + " doesn't exist.";
+    @GetMapping(value = "/{customerId}")
+    public ResponseEntity getCustomerbyID(@PathVariable long customerId) {
+        Customer customer = customerService.getCustomerById(customerId);
+        String msg = "Customer with ID: " + customerId + " doesn't exist.";
         ResponseEntity responseEntity = responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
 
         if (customer != null) {
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(customer);
-            logger.info("Successfully get customer " + customerName);
+            logger.info("Successfully get customer with ID: " + customer.getId()
+                    + " Name: " + customer.getName());
+        } else {
+            logger.debug(msg);
+        }
+
+        return responseEntity;
+    }
+
+    @GetMapping(value = "/name/{customerName}", produces = "application/json")
+    public ResponseEntity getCustomerbyName(@PathVariable String customerName) {
+        List<Customer> customers = customerService.getCustomerByName(customerName);
+        String msg = "Customer with Name: " + customerName + " doesn't exist.";
+        ResponseEntity responseEntity = responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
+
+        if (customers != null) {
+            responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(customers);
+
+            for (Customer customer : customers) {
+                logger.info("Successfully get customer with ID: " + customer.getId()
+                        + " Name: " + customer.getName());
+            }
         } else {
             logger.debug(msg);
         }
@@ -43,14 +66,24 @@ public class CustomerController {
 
     @PostMapping(value = "", consumes = "application/json")
     public ResponseEntity createCustomer(@RequestBody Customer customer) {
-        String msg = "Customer " + customer.getName() + " has been created.";
-        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_CREATED).body(msg);
-        long isSuccess = customerService.save(customer);
+        String msg = msg = "Cannot create customer with ID: " + customer.getId()
+                + " Name: " + customer.getName();
+        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_ACCEPTABLE).body(msg);
+        boolean isSuccess = customerService.save(customer);
 
-        if (isSuccess == 0) {
-            msg = "Cannot create customer " + customer.getName() + ".";
-            responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_ACCEPTABLE).body(msg);
-            logger.debug(msg);
+        if (isSuccess == true) {
+            List<Customer> customers = customerService.getCustomerByName(customer.getName());
+            Collections.sort(customers, (Customer fCus, Customer sCus) -> (int)(sCus.getId() - fCus.getId()));
+
+            for (Customer currentCustomer : customers) {
+                if (currentCustomer.equals(customer)) {
+                    msg = "Customer has been created with ID: " + currentCustomer.getId()
+                            + " Name: " + currentCustomer.getName();
+                    responseEntity = ResponseEntity.status(HttpServletResponse.SC_CREATED).body(msg);
+                    logger.info(msg);
+                    break;
+                }
+            }
         } else {
             logger.info(msg + " " + customer.toString());
         }
@@ -61,12 +94,14 @@ public class CustomerController {
     @PutMapping(value = "/{customerId}", consumes = "application/json")
     public ResponseEntity updateCustomer(@PathVariable long customerId, @RequestBody Customer customer) {
         Customer newCustomer = new Customer(customerId, customer.getName(), customer.getAddress());
-        String msg = "Customer " + customer.getName() + " has been updated.";
+        String msg = "Customer with ID: " + customerId
+                + " Name: " + customer.getName() + " has been updated.";
         ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(msg);
         boolean isSuccess = customerService.update(newCustomer);
 
         if (!isSuccess) {
-            msg = "Cannot update. Customer " + customer.getName() + " does not exist.";
+            msg = "Cannot update. Customer with ID: " + customerId
+                    + " Name: " + customer.getName() + " does not exist.";
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
             logger.debug(msg);
         } else {
@@ -76,14 +111,19 @@ public class CustomerController {
         return responseEntity;
     }
 
-    @DeleteMapping(value = "/{customerName}")
-    public ResponseEntity deleteCustomer(@PathVariable String customerName) {
-        String msg = "Customer " + customerName + " was deleted.";
+    @DeleteMapping(value = "/{customerId}", produces = "application/json")
+    public ResponseEntity deleteCustomer(@PathVariable long customerId) {
+        String msg = "Customer with ID: " + customerId + " was deleted.";
         ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NO_CONTENT).body(msg);
-        boolean isSuccess = customerService.delete(customerName);
+        Customer customer = customerService.getCustomerById(customerId);
+        boolean isSuccess = false;
+
+        if (customer != null) {
+            isSuccess = customerService.delete(customer.getName());
+        }
 
         if (!isSuccess) {
-            msg = "Cannot delete. Customer " + customerName + " does not exist.";
+            msg = "Cannot delete. Customer with ID: " + customerId + " does not exist.";
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
             logger.debug(msg);
         } else {
