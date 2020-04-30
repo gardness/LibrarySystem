@@ -33,9 +33,9 @@ public class CustomerServiceTest {
     @Before
     public void before() {
         Customer fCustomer = new Customer("Timothy", "255 A St NE, Washington, DC");
-        long fRet = customerService.save(fCustomer);
+        customerService.save(fCustomer);
         Customer sCustomer = new Customer("Joe", "6787 Washington Blvd, Arlington, VA");
-        long sRet = customerService.save(sCustomer);
+        customerService.save(sCustomer);
     }
 
     @After
@@ -47,8 +47,8 @@ public class CustomerServiceTest {
     @Test
     public void save() {
         Customer newCustomer = new Customer("Kenton", "2111 Jefferson Davis Hwy APT 703N, Arlington, VA");
-        long ret = customerService.save(newCustomer);
-        Assert.assertNotNull(ret);
+        boolean ret = customerService.save(newCustomer);
+        Assert.assertTrue(ret);
 
         customerService.delete(newCustomer.getName());
         logger.info("First Test!");
@@ -88,15 +88,15 @@ public class CustomerServiceTest {
 
     @Test
     public void getCustomerByName() {
-        Customer customer = customerService.getCustomerByName("Joe");
+        List<Customer> customer = customerService.getCustomerByName("Joe");
 
         Assert.assertNotNull(customer);
     }
 
     @Test
     public void getCustomerById() {
-        Customer oldCustomer = customerService.getCustomerByName("Joe");
-        Customer customer = customerService.getCustomerById(oldCustomer.getId());
+        List<Customer> customers = customerService.getCustomerByName("Joe");
+        Customer customer = customerService.getCustomerById(customers.get(0).getId());
 
         Assert.assertNotNull(customer);
     }

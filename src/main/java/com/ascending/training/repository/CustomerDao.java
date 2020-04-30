@@ -5,7 +5,7 @@ import com.ascending.training.model.Customer;
 import java.util.List;
 
 public interface CustomerDao {
-    long save(Customer customer);
+    boolean save(Customer customer);
 
     boolean update(Customer customer);
 
@@ -13,7 +13,7 @@ public interface CustomerDao {
 
     List<Customer> getCustomers();
 
-    Customer getCustomerByName(String customerName);
+    List<Customer> getCustomerByName(String customerName);
 
     Customer getCustomerById(long customerId);
 }

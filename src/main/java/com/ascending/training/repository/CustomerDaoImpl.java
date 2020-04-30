@@ -23,10 +23,10 @@ public class CustomerDaoImpl implements CustomerDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public long save(Customer customer) {
+    public boolean save(Customer customer) {
         Transaction transaction = null;
         long customerId = 0;
-        Boolean isSuccess = true;
+        boolean isSuccess = true;
 
         logger.warn("Before getSessionFactory.openSession().");
         try (Session session = sessionFactory.openSession()) {
@@ -34,7 +34,7 @@ public class CustomerDaoImpl implements CustomerDao {
             transaction = session.beginTransaction();
 
             logger.warn("Enter beginTransaction().");
-            customerId = (long) session.save(customer);
+            session.save(customer);
 
             logger.warn("session.save() completes.");
             transaction.commit();
@@ -47,10 +47,12 @@ public class CustomerDaoImpl implements CustomerDao {
         }
 
         if (isSuccess) {
-            logger.warn(String.format("The customer %s has been inserted into the table.", customer.toString()));
+            logger.warn(String.format("Successfully saved. Customer %s has been added to the table.", customer.toString()));
+        } else {
+            logger.warn(String.format("Failed to save. Customer %s has not been added to the table.", customer.toString()));
         }
 
-        return customerId;
+        return isSuccess;
     }
 
     @Override
@@ -107,6 +109,11 @@ public class CustomerDaoImpl implements CustomerDao {
                 "left join fetch ct.issueStatuses";
         try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
+
+            for (Customer customer : query.list()) {
+                logger.warn(customer.toString());
+            }
+
             return query.list();
         } catch (HibernateException e){
             logger.error(String.format("Unable to open session, %s", e.getMessage()));
@@ -115,7 +122,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Customer getCustomerByName(String customerName) {
+    public List<Customer> getCustomerByName(String customerName) {
         if (customerName == null) {
             return null;
         }
@@ -128,10 +135,11 @@ public class CustomerDaoImpl implements CustomerDao {
             Query<Customer> query = session.createQuery(hql);
             query.setParameter("customerName", customerName.toLowerCase());
 
-            Customer customer = query.uniqueResult();
-            logger.warn(customer.toString());
+            for (Customer customer : query.list()) {
+                logger.warn(customer.toString());
+            }
 
-            return customer;
+            return query.list();
         } catch (Exception e){
             logger.error(String.format("Unable to open session, %s", e.getMessage()));
         }
@@ -147,7 +155,9 @@ public class CustomerDaoImpl implements CustomerDao {
             return null;
         }
 
-        String hql = "from Customer as ct where ct.id = :customerId";
+        String hql = "from Customer as ct " +
+                "left join fetch ct.issueStatuses as is " +
+                "where ct.id = :customerId";
 
         try (Session session = sessionFactory.openSession()) {
             Query<Customer> query = session.createQuery(hql);
