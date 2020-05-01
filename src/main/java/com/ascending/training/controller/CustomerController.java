@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class CustomerController {
     public ResponseEntity getCustomerbyID(@PathVariable long customerId) {
         Customer customer = customerService.getCustomerById(customerId);
         String msg = "Customer with ID: " + customerId + " doesn't exist.";
-        ResponseEntity responseEntity = responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
+        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
 
         if (customer != null) {
             responseEntity = ResponseEntity.status(HttpServletResponse.SC_OK).body(customer);
@@ -114,7 +115,10 @@ public class CustomerController {
     @DeleteMapping(value = "/{customerId}", produces = "application/json")
     public ResponseEntity deleteCustomer(@PathVariable long customerId) {
         String msg = "Customer with ID: " + customerId + " was deleted.";
-        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NO_CONTENT).body(msg);
+        HashMap<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("msg", msg);
+
+        ResponseEntity responseEntity = ResponseEntity.status(HttpServletResponse.SC_NO_CONTENT).body(jsonMap);
         Customer customer = customerService.getCustomerById(customerId);
         boolean isSuccess = false;
 
@@ -124,7 +128,8 @@ public class CustomerController {
 
         if (!isSuccess) {
             msg = "Cannot delete. Customer with ID: " + customerId + " does not exist.";
-            responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(msg);
+            jsonMap.put("msg", msg);
+            responseEntity = ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(jsonMap);
             logger.debug(msg);
         } else {
             logger.info(msg);
